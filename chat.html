@@ -1,0 +1,41 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chat with GPT-like Bot</title>
+<script>
+function sendMessage() {
+    var user_input = document.getElementById("user_input").value;
+    fetch("/get_response", {
+        method: "POST",
+        body: JSON.stringify({ "user_input": user_input }),
+        headers: {
+            "Content-Type": "application/json"
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        var chatBox = document.getElementById("chat-box");
+        chatBox.innerHTML += `<div>User: ${user_input}</div>`;
+        chatBox.innerHTML += `<div>Bot: ${data.bot_response}</div>`;
+        document.getElementById("user_input").value = "";  // Clear input box
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+    document.getElementById("send_button").addEventListener("click", sendMessage);
+});
+</script>
+</head>
+<body>
+<h1>Chat with GPT-like Bot</h1>
+<div id="chat-box" style="height:300px; overflow:auto; border:1px solid #ccc; padding:10px;">
+    <!-- Chat will be displayed here -->
+</div>
+<input type="text" id="user_input" />
+<button id="send_button">Send</button>
+</body>
+</html>
